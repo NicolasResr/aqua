@@ -23,9 +23,9 @@ const serial = async (valoresSensorLuminosidade) => {
   let poolBancoDados = mysql
     .createPool({
       host: "localhost",
-      user: "lumi_insert",
-      password: "lumiinsert",
-      database: "lumi",
+      user: "aluno",
+      password: "Sptech#2024",
+      database: "sistema_lumi",
       port: 3307,
     })
     .promise();
@@ -61,11 +61,7 @@ const serial = async (valoresSensorLuminosidade) => {
       try {
         console.log("Valor recebido:", data);
 
-        // separa os dados recebidos pelo caractere ";"
-        const valores = data.split(";");
-
-        // transforma a leitura analógica em número
-        const valorAnalogico = parseFloat(valores[0]);
+        const valorAnalogico = parseFloat(data.trim());
 
         // verifica se o valor recebido é válido
         if (isNaN(valorAnalogico)) {
@@ -111,7 +107,7 @@ const serial = async (valoresSensorLuminosidade) => {
         // insere os dados no banco de dados
         if (HABILITAR_OPERACAO_INSERIR) {
           await poolBancoDados.execute(
-            "INSERT INTO Leituras (id_Sensor, lux, ppfd, data_hora) VALUES (?, ?, ?, NOW())",
+            "INSERT INTO Leituras (fk_sensor, lux, ppfd, data_hora) VALUES (?, ?, ?, NOW())",
             [ID_SENSOR, sensorLuminosidade, ppfd]
           );
 
